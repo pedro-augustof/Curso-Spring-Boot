@@ -1,5 +1,6 @@
 package com.udemy.cursospring.Vendas.rest.controller;
 
+import com.udemy.cursospring.Vendas.exception.PedidoNaoEncontradoException;
 import com.udemy.cursospring.Vendas.exception.RegraNegocioException;
 import com.udemy.cursospring.Vendas.rest.ApiErrors;
 import org.springframework.http.HttpStatus;
@@ -15,5 +16,11 @@ public class ApplicationControllerAdvice {
     public ApiErrors handleRegraNegocioException(RegraNegocioException ex){
         String mensagemErro = ex.getMessage();
         return new ApiErrors(mensagemErro);
+    }
+
+    @ExceptionHandler(PedidoNaoEncontradoException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiErrors handlePedidoNotFoundException(PedidoNaoEncontradoException ex){
+        return new ApiErrors(ex.getMessage());
     }
 }

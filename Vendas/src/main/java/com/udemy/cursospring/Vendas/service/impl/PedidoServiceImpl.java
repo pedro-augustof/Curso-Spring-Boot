@@ -4,10 +4,12 @@ import com.udemy.cursospring.Vendas.domain.entity.Cliente;
 import com.udemy.cursospring.Vendas.domain.entity.ItemPedido;
 import com.udemy.cursospring.Vendas.domain.entity.Pedido;
 import com.udemy.cursospring.Vendas.domain.entity.Produto;
+import com.udemy.cursospring.Vendas.domain.enums.StatusPedido;
 import com.udemy.cursospring.Vendas.domain.repository.Clientes;
 import com.udemy.cursospring.Vendas.domain.repository.ItensPedido;
 import com.udemy.cursospring.Vendas.domain.repository.Pedidos;
 import com.udemy.cursospring.Vendas.domain.repository.Produtos;
+import com.udemy.cursospring.Vendas.exception.PedidoNaoEncontradoException;
 import com.udemy.cursospring.Vendas.exception.RegraNegocioException;
 import com.udemy.cursospring.Vendas.rest.dto.ItemPedidoDTO;
 import com.udemy.cursospring.Vendas.rest.dto.PedidoDTO;
@@ -43,6 +45,7 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setTotal(dto.getTotal());
         pedido.setDataPedido(LocalDate.now());
         pedido.setCliente(cliente);
+        pedido.setStatus(StatusPedido.REALIZADO);
 
         List<ItemPedido> itensPedidos = converterItens(pedido, dto.getItems());
         repository.save(pedido);
@@ -50,6 +53,20 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setItens(itensPedidos);
 
         return pedido;
+    }
+
+    @Override
+    public Optional<Pedido> obterPedidoCompleto(Integer id) {
+        return repository.findByIdFetchItens(id);
+    }
+
+    @Override
+    @Transactional
+    public void atualizaStatus(Integer id, StatusPedido statusPedido) {
+        repository.findById(id).map( pedido -> {
+            pedido.setStatus(statusPedido);
+            return repository.save(pedido);
+        }).orElseThrow(() -> new PedidoNaoEncontradoException());
     }
 
     private List<ItemPedido> converterItens(Pedido pedido, List<ItemPedidoDTO> itens){
