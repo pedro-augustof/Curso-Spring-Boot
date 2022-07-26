@@ -26,5 +26,5 @@ public class InformacoesPedidoDTO {
 
     private String status;
 
-    private List<InformacoesItemPedidoDTO> itens;
+    private List<InformacoesItemPedidoDTO> items;
 }

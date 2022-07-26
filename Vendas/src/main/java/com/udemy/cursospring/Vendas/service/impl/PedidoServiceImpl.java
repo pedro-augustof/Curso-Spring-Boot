@@ -47,17 +47,17 @@ public class PedidoServiceImpl implements PedidoService {
         pedido.setCliente(cliente);
         pedido.setStatus(StatusPedido.REALIZADO);
 
-        List<ItemPedido> itensPedidos = converterItens(pedido, dto.getItems());
+        List<ItemPedido> itemsPedidos = converterItens(pedido, dto.getItems());
         repository.save(pedido);
-        itensPedidoRepository.saveAll(itensPedidos);
-        pedido.setItens(itensPedidos);
+        itensPedidoRepository.saveAll(itemsPedidos);
+        pedido.setItems(itemsPedidos);
 
         return pedido;
     }
 
     @Override
     public Optional<Pedido> obterPedidoCompleto(Integer id) {
-        return repository.findByIdFetchItens(id);
+        return repository.findByIdFetchItems(id);
     }
 
     @Override

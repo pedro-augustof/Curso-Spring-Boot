@@ -36,12 +36,12 @@ public class Pedido {
     private StatusPedido status;
 
     @OneToMany(mappedBy = "pedido")
-    private List<ItemPedido> itens;
+    private List<ItemPedido> items;
 
-    public List<ItemPedido> getItens(){
-        if (this.itens == null){
-            this.itens = new ArrayList<>();
+    public List<ItemPedido> getItems(){
+        if (this.items == null){
+            this.items = new ArrayList<>();
         }
-        return this.itens;
+        return this.items;
     }
 }
